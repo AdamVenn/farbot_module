@@ -155,7 +155,7 @@ void do_thread_test()
                 {
                     EXPECT_TRUE (values.emplace (value).second);
 
-                    if (number_of_writer_threads == 1)
+                    if constexpr (number_of_writer_threads == 1)
                     {
                         EXPECT_GT (value, lastValue);
                     }
@@ -269,8 +269,8 @@ TEST(RealtimeMutatable, tester)
     {
         RealtimeBiquads::ScopedAccess<farbot::ThreadType::nonRealtime> scopedAccess(realtime);
 
-        scopedAccess->a1 = 1.0;
-        scopedAccess->a2 = 1.4;
+        scopedAccess->a1 = 1.0f;
+        scopedAccess->a2 = 1.4f;
     }
 
     {
@@ -279,7 +279,7 @@ TEST(RealtimeMutatable, tester)
         std::cout << scopedAccess->a1 << std::endl;
     }
 
-    realtime.nonRealtimeReplace(1.0, 1.2, 3.4, 5.4, 5.4);
+    realtime.nonRealtimeReplace(1.0f, 1.2f, 3.4f, 5.4f, 5.4f);
 }
 
 TEST(NonRealtimeMutatable, tester)
@@ -294,8 +294,8 @@ TEST(NonRealtimeMutatable, tester)
     {
         RealtimeBiquads::ScopedAccess<farbot::ThreadType::realtime> scopedAccess(realtime);
 
-        scopedAccess->a1 = 1.0;
-        scopedAccess->a2 = 1.4;
+        scopedAccess->a1 = 1.0f;
+        scopedAccess->a2 = 1.4f;
     }
 
     {
@@ -304,7 +304,7 @@ TEST(NonRealtimeMutatable, tester)
         std::cout << scopedAccess->a1 << std::endl;
     }
 
-    realtime.realtimeReplace(1.0, 1.2, 3.4, 5.4, 5.4);
+    realtime.realtimeReplace(1.0f, 1.2f, 3.4f, 5.4f, 5.4f);
 }
 
 TEST(RealtimeMutatable, valueIsPreserved)
