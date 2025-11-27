@@ -4,10 +4,14 @@ project(farbot)
 set(CMAKE_CXX_STANDARD 17)
 find_package(Threads REQUIRED)
 
-# Enable testing
-include(GoogleTest)
-enable_testing()
-set(GTEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest")
+option(FARBOT_ENABLE_TESTS "Enable building of unit tests" OFF)
+
+if(FARBOT_ENABLE_TESTS)
+  # Enable testing
+  include(GoogleTest)
+  enable_testing()
+  set(GTEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest")
+endif()
 
 # Set a default build type if none was specified
 set(default_build_type "Release")
@@ -57,10 +61,11 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
  set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -latomic")
 endif()
 
-add_executable(gtestrunner test/test.cpp include/farbot/AsyncCaller.hpp include/farbot/RealtimeTraits.hpp include/farbot/RealtimeObject.hpp include/farbot/detail/RealtimeObject.tcc include/farbot/fifo.hpp include/farbot/detail/fifo.tcc ${GTEST_DIR}/src/gtest_main.cc ${GTEST_DIR}/src/gtest-all.cc)
-target_include_directories(gtestrunner PRIVATE include ${GTEST_DIR} ${GTEST_DIR}/include)
-target_link_libraries(gtestrunner Threads::Threads) 
-
-gtest_add_tests(TARGET gtestrunner SOURCES test/test.cpp)
+if(FARBOT_ENABLE_TESTS)
+  add_executable(gtestrunner test/test.cpp include/farbot/AsyncCaller.hpp include/farbot/RealtimeTraits.hpp include/farbot/RealtimeObject.hpp include/farbot/detail/RealtimeObject.tcc include/farbot/fifo.hpp include/farbot/detail/fifo.tcc ${GTEST_DIR}/src/gtest_main.cc ${GTEST_DIR}/src/gtest-all.cc)
+  target_include_directories(gtestrunner PRIVATE include ${GTEST_DIR} ${GTEST_DIR}/include)
+  target_link_libraries(gtestrunner Threads::Threads) 
+  gtest_add_tests(TARGET gtestrunner SOURCES test/test.cpp)
+endif()
 
 install(DIRECTORY include/farbot DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
