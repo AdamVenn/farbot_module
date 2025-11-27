@@ -69,3 +69,7 @@ if(FARBOT_ENABLE_TESTS)
 endif()
 
 install(DIRECTORY include/farbot DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+
+add_library(farbot_interface INTERFACE)
+target_include_directories(farbot_interface INTERFACE include)
+add_library(farbot::farbot ALIAS farbot_interface)
